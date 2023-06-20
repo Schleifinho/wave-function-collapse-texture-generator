@@ -63,6 +63,9 @@ class Wave:
         candidate_index = candidate.get_index()
         final_candidate = candidate.get_random_candidate()
 
+        if final_candidate == -1:
+            return
+
         north_neighbors = self.north_south_adjacency_matrix.T[final_candidate]
         self.__update_neighbor(candidate_index, (-1, 0), north_neighbors)
 

@@ -25,18 +25,15 @@ def main():
     image_path = config["DEFAULT"]["IMAGE_PATH"]
     border_mode = BorderTypes(config["DEFAULT"]["BORDER_MODE"])
 
-
     my_wave = Wave(num_of_tiles, north_south, east_west, field_width, field_height, border_mode)
-    print(my_wave)
 
     canvas = np.full((field_height * tile_size, field_width * tile_size, 3), bg_color, np.uint8)
 
     folder = config['TILES']['FOLDER'] + "/"
     tiles_imgs = [cv2.imread(folder + tile) for tile in config['TILES']['TILE_IMGS']]
 
-    # print(tiles_imgs)
     for candidate in my_wave.candidate_field.flat:
-        if len(candidate) == 0:
+        if candidate.is_final and candidate.candidates[0] >= 0:
             canvas[candidate.pos_x * tile_size:candidate.pos_x * tile_size + tile_size, candidate.pos_y * tile_size:candidate.pos_y * tile_size + tile_size] = tiles_imgs[candidate.candidates[0]]
 
     cv2.imwrite(image_path, canvas)
@@ -51,7 +48,7 @@ def validate_config(config):
 
     # DEFAULT
     # Check specific settings within sections
-    required_default_numbers = ['NUMBER_OF_TILES', 'WIDTH', 'HEIGHT', 'TILE_SIZE', 'BG_COLOR']
+    required_default_numbers = ['NUMBER_OF_TILES', 'WIDTH', 'HEIGHT', 'TILE_SIZE']
     for key in required_default_numbers:
         if key in config['DEFAULT']:
             elem = config['DEFAULT'][key]
@@ -63,9 +60,18 @@ def validate_config(config):
     if "BORDER_MODE" in config['DEFAULT']:
         elem = config['DEFAULT']['BORDER_MODE']
         if not isinstance(elem, int) or not BorderTypes.has_value(elem):
-            raise ValueError(f"Invalid 'BORDER_MODE' value in the 'DEFAULT' section. usually >= 0 and < {len(BorderTypes)}")
+            raise ValueError(
+                f"Invalid 'BORDER_MODE' value in the 'DEFAULT' section. usually >= 0 and < {len(BorderTypes)}")
     else:
-        raise ValueError(f"Missing {key} setting in the 'DEFAULT' section.")
+        raise ValueError(f"Missing 'BORDER_MODE' setting in the 'DEFAULT' section.")
+
+    if "BG_COLOR" in config['DEFAULT']:
+        elem = config['DEFAULT']['BG_COLOR']
+        if not isinstance(elem, int) or elem < 0:
+            raise ValueError(f"Invalid 'BG_COLOR' value in the 'DEFAULT' section.")
+    else:
+        raise ValueError(f"Missing 'BORDER_MODE' setting in the 'DEFAULT' section.")
+
     if 'IMAGE_PATH' in config['DEFAULT']:
         path = config['DEFAULT']['IMAGE_PATH']
         if not isinstance(path, str) or len(path) == 0 or not (path.endswith(".png") or path.endswith(".jpg")):

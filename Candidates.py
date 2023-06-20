@@ -21,7 +21,10 @@ class Candidates:
         self.__update_values__(intersection)
 
     def get_random_candidate(self):
-        candidate = random.choice(self.candidates)
+        candidate = -1
+        if len(self.candidates) > 0:
+            candidate = random.choice(self.candidates)
+
         self.is_final = True
         self.__update_values__([candidate])
         return candidate
