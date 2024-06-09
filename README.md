@@ -13,11 +13,11 @@ This Python script generates textures using the Wave Function Collapse algorithm
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/wfc-texture-generator.git
+    git clone https://github.com/Schleifinho/wave-function-collapse-texture-generator.git
     ```
 2. Navigate to the project directory:
     ```sh
-    cd wfc-texture-generator
+    cd wave-function-collapse-texture-generator
     ```
 3. (Optional) Create and activate a virtual environment:
     ```sh
@@ -47,7 +47,7 @@ The configuration file `config.toml` allows customization of various parameters.
 - **HEIGHT**: Height of the generated texture in tiles (default: 32).
 - **TILE_SIZE**: Size of each tile in pixels (default: 64).
 - **BG_COLOR**: Background color for the texture (default: 0).
-- **BORDER_MODE**: Mode for handling borders (default: 1).
+- **BORDER_MODE**: Mode for handling borders (default: 1, None = 0, Seamless = 1).
 - **IMAGE_PATH**: Path to save the final generated image (default: "final.jpg").
 
 ### `[NORTH_SOUTH]`
