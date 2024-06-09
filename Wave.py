@@ -3,6 +3,7 @@ import random
 from Candidates import Candidates
 from enum import Enum
 
+
 class BorderTypes(Enum):
     NONE = 0
     SEAMLESS = 1
@@ -11,9 +12,12 @@ class BorderTypes(Enum):
     def has_value(cls, value):
         return any(value == item.value for item in cls)
 
+
 class Wave:
-    def __init__(self, _number_of_tiles, _north_south_adjacency_matrix, _east_west_adjacency_matrix, _field_width, _field_height, _border_type):
-        if not ((_number_of_tiles, _number_of_tiles) == _north_south_adjacency_matrix.shape == _north_south_adjacency_matrix.shape):
+    def __init__(self, _number_of_tiles, _north_south_adjacency_matrix, _east_west_adjacency_matrix, _field_width,
+                 _field_height, _border_type):
+        if not ((_number_of_tiles,
+                 _number_of_tiles) == _north_south_adjacency_matrix.shape == _north_south_adjacency_matrix.shape):
             raise Exception("_number_of_tiles and adjacency_matrices shap mismatch! num x num == shape")
 
         self.number_of_tiles = _number_of_tiles
@@ -25,12 +29,12 @@ class Wave:
 
         candidates = [i for i in range(_number_of_tiles)]
 
-        self.candidate_field = np.array( [ [Candidates(candidates, j, i) for i in range(_field_width)] for j in range(_field_height) ],
-                    dtype=object)
+        self.candidate_field = np.array(
+            [[Candidates(candidates, j, i) for i in range(_field_width)] for j in range(_field_height)],
+            dtype=object)
 
         for i in range(_field_width * _field_height):
             self.collapse_once()
-
 
     def print_neighbor_matrices(self):
         print("--- NORTH - SOUTH ---")
@@ -78,7 +82,6 @@ class Wave:
         west_neighbors = self.east_west_adjacency_matrix.T[final_candidate]
         self.__update_neighbor(candidate_index, (0, -1), west_neighbors)
 
-
     def __update_neighbor(self, candidate_index, offset, neighbors):
         neighbor_index = candidate_index[0] + offset[0], candidate_index[1] + offset[1]
 
@@ -86,14 +89,13 @@ class Wave:
             if not self.__valid_neighbor_index__(neighbor_index):
                 return
         elif self.border_type == BorderTypes.SEAMLESS:
-                neighbor_index = self.__get_wrapped_neighbor_index__(neighbor_index)
+            neighbor_index = self.__get_wrapped_neighbor_index__(neighbor_index)
 
         if self.candidate_field[neighbor_index].is_final:
             return
 
         neighbor_candidates = np.where(neighbors == True)
         self.candidate_field[neighbor_index].intersect_with(neighbor_candidates)
-
 
     def __get_wrapped_neighbor_index__(self, neighbor_index):
         row = neighbor_index[0]
@@ -110,14 +112,12 @@ class Wave:
 
         return row, col
 
-
     def __valid_neighbor_index__(self, neighbor_index):
         if neighbor_index[0] < 0 or neighbor_index[0] >= self.field_height:
             return False
         if neighbor_index[1] < 0 or neighbor_index[1] >= self.field_width:
             return False
         return True
-
 
     def __str__(self):
         str_builder = "-" * self.field_width + "\n"
@@ -143,10 +143,3 @@ class Wave:
         str_builder += "-" * self.field_width + "\n"
         str_builder += "=========================\n"
         return str_builder
-
-
-
-
-
-
-

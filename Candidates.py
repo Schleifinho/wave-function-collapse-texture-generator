@@ -2,6 +2,7 @@ import random
 
 import numpy as np
 
+
 class Candidates:
     def __init__(self, _candidates, _pos_x, _pos_y):
         self.candidates = _candidates
@@ -10,11 +11,9 @@ class Candidates:
         self.cardinality = len(_candidates)
         self.is_final = self.cardinality == 1
 
-
     def __update_values__(self, new_candidates):
         self.candidates = new_candidates
         self.cardinality = len(new_candidates)
-
 
     def intersect_with(self, others):
         intersection = np.intersect1d(self.candidates, others)
@@ -29,12 +28,10 @@ class Candidates:
         self.__update_values__([candidate])
         return candidate
 
-
     def get_index(self):
         return self.pos_x, self.pos_y
 
-
-    #region Default Overrides
+    # region Default Overrides
     def __len__(self):
         return 0 if self.is_final else self.cardinality
 
@@ -61,5 +58,4 @@ class Candidates:
 
     def __str_cardinality__(self):
         return str(self.cardinality)
-    #endregion
-
+    # endregion
